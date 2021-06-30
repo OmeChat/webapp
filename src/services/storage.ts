@@ -1,4 +1,5 @@
 import {StorageServiceMethods} from "../../typings/services/storage";
+import {LoginCredentials} from "../../typings/models/LoginCredentials";
 
 export class StorageService implements StorageServiceMethods {
 
@@ -10,5 +11,13 @@ export class StorageService implements StorageServiceMethods {
         return localStorage.getItem("userHash") != null
             && localStorage.getItem("clientHash") != null
             && localStorage.getItem("accessToken") != null;
+    }
+
+    getUserLoginCredentials(): LoginCredentials {
+        return {
+            userHash: localStorage.getItem("userHash"),
+            clientHash: localStorage.getItem("clientHash"),
+            accessToken: localStorage.getItem("accessToken")
+        } as LoginCredentials;
     }
 }
