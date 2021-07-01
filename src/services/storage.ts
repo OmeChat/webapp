@@ -13,11 +13,25 @@ export class StorageService implements StorageServiceMethods {
             && localStorage.getItem("accessToken") != null;
     }
 
+    // This function returns the LoginCredentials for the websocket
+    // as the LoginCredentials type.
     getUserLoginCredentials(): LoginCredentials {
         return {
             userHash: localStorage.getItem("userHash"),
             clientHash: localStorage.getItem("clientHash"),
             accessToken: localStorage.getItem("accessToken")
         } as LoginCredentials;
+    }
+
+    // saves the login credentials into
+    // the localstorage by the given values
+    setUserLoginCredentials(
+        userHash: string,
+        clientHash: string,
+        accessToken: string
+    ): void {
+        localStorage.setItem("userHash", userHash);
+        localStorage.setItem("clientHash", clientHash);
+        localStorage.setItem("accessToken", accessToken);
     }
 }

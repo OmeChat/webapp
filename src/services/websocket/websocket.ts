@@ -14,6 +14,13 @@ export class Websocket {
     // sends a response.
     login(handler: any): void {
         this.ws?.setHandler(handler);
-        this.ws?.send(JSON.stringify(new StorageService().getUserLoginCredentials()));
+        let data = new StorageService().getUserLoginCredentials();
+        this.ws?.send(JSON.stringify({
+            action: "login",
+            user_hash: data.userHash,
+            client_hash: data.clientHash,
+            access_token: data.accessToken,
+            payload: {}
+        }));
     }
 }
