@@ -4,6 +4,7 @@ import {StorageService} from "./services/storage";
 import {Websocket} from "./services/websocket/websocket";
 import {IMessageEvent} from "websocket";
 import {WebsocketErrorResponse} from "../typings/models/WebsocketErrorResponse";
+import {LoginPage} from "./pages/LoginPage/LoginPage";
 
 export default class App extends React.Component<any, AppState> {
 
@@ -13,6 +14,7 @@ export default class App extends React.Component<any, AppState> {
 
     async componentDidMount() {
 
+        // check, if there are login credentials saved into the localStorage
         if (!new StorageService().checkUserLoginCredentials()) {
             this.setState({loadedData: true, websocketLoginSuccessful: false});
         } else {
@@ -37,7 +39,7 @@ export default class App extends React.Component<any, AppState> {
         if (this.state.websocketLoginSuccessful) {
             return <div>successful login</div>;
         } else {
-            return <div>login failed</div>;
+            return <LoginPage />;
         }
     }
 }
