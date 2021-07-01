@@ -5,11 +5,13 @@ import {Websocket} from "./services/websocket/websocket";
 import {IMessageEvent} from "websocket";
 import {WebsocketErrorResponse} from "../typings/models/WebsocketErrorResponse";
 import {LoginPage} from "./pages/LoginPage/LoginPage";
+import {ChatPage} from "./pages/ChatPage/ChatPage";
 
 export default class App extends React.Component<any, AppState> {
 
     state: AppState = {
         loadedData: false,
+        websocket: new Websocket()
     };
 
     async componentDidMount() {
@@ -18,7 +20,7 @@ export default class App extends React.Component<any, AppState> {
         if (!new StorageService().checkUserLoginCredentials()) {
             this.setState({loadedData: true, websocketLoginSuccessful: false});
         } else {
-            new Websocket().login((event: IMessageEvent) => {
+            this.state.websocket.login((event: IMessageEvent) => {
                 if ((JSON.parse(event.data as string) as WebsocketErrorResponse).error === "The given login credentials are wrong") {
                     this.setState({loadedData: true, websocketLoginSuccessful: false});
                 } else {
@@ -37,7 +39,7 @@ export default class App extends React.Component<any, AppState> {
             )
         }
         if (this.state.websocketLoginSuccessful) {
-            return <div>successful login</div>;
+            return <ChatPage websocket={this.state.websocket} />;
         } else {
             return <LoginPage />;
         }

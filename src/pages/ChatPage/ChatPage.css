@@ -1,0 +1,7 @@
+.full-bg {
+    width: 100vw;
+    height: 100vh;
+    background: #12151C;
+    display: grid;
+    grid-template-columns: 30% 70%;
+}
