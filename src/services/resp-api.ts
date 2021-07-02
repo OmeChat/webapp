@@ -1,6 +1,7 @@
 import {AddClientResponse} from "../../typings/services/rest-api/AddClient";
 import {ErrorResponse} from "../../typings/services/rest-api/ErrorResponse";
 import {StorageService} from "./storage";
+import {GetUsernamesResponse} from "../../typings/services/rest-api/GetUsernames";
 
 var BASE_URL = "https://api.omechat.mathis-burger.de";
 
@@ -10,7 +11,7 @@ export class RespAPI {
     // the given client. It returns the state of this login process as a
     // boolean value.
     async addClient(username: string, secret: string): Promise<boolean> {
-        let resp = await this.post<AddClientResponse | ErrorResponse>("/user-api/add-client", {
+        let resp = await RespAPI.post<AddClientResponse | ErrorResponse>("/user-api/add-client", {
             username: username,
             account_secret: secret
         });
@@ -23,10 +24,58 @@ export class RespAPI {
         }
     }
 
+    // This method provides the functionality to communicate
+    // with the backend and fetch the usernames for the userHashes.
+    // The data is parsed as params into a map within the login
+    // credentials from the local storage.
+    async getUsernames(userHashes: string[]): Promise<Map<string, string>> {
+        let usernameString = "";
+        userHashes.forEach((val: string) => {
+            usernameString === "" ?
+                usernameString = `${usernameString}${val}` :
+                usernameString = `${usernameString};${val}`
+        });
+        let loginCredentials = new StorageService().getUserLoginCredentials();
+        let params = new Map<string, string>([
+            ["user_hash", loginCredentials.userHash],
+            ["client_hash", loginCredentials.clientHash],
+            ["access_token", loginCredentials.accessToken],
+            ["usernames", usernameString]
+        ]);
+        let resp = await RespAPI.get<GetUsernamesResponse>("/user-api/get-usernames", params);
+        return resp.usernames;
+    }
+
+    // This function implements the functionality to perform a get
+    // request to the backend and returns the given response
+    // payload as an json-parsed object of the requested generic.
+    // Furthermore it checks if there are given params and adds this params
+    // to the url itself.
+    private static async get<T>(path: string, params: Map<string, string> | undefined): Promise<T> {
+        let URL = `${BASE_URL}${path}`;
+        if (params !== undefined) {
+            URL += "?"
+            params.forEach((value: string, key: string) => {
+                if (URL.slice(URL.length - 1) === "?") {
+                    URL = `${URL}${key}=${value}`;
+                } else {
+                    URL = `${URL}&${key}=${value}`;
+                }
+            });
+        }
+        let resp = await fetch(URL, {
+            method: "GET",
+            headers: {
+                "Content-Type": "application/json"
+            },
+        });
+        return await resp.json() as T;
+    }
+
     // This function implements the functionality to perform a post
     // request to the backend and returns the given response
     // payload as an json-parsed object of the requested generic.
-    private async post<T>(path: string, payload: any): Promise<T> {
+    private static async post<T>(path: string, payload: any): Promise<T> {
         let resp = await fetch(`${BASE_URL}${path}`, {
             method: "POST",
             mode: "cors",

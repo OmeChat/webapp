@@ -1,4 +1,4 @@
-import {StorageServiceMethods} from "../../typings/services/storage";
+import {Message, MessageArray, StorageServiceMethods} from "../../typings/services/storage";
 import {LoginCredentials} from "../../typings/models/LoginCredentials";
 
 export class StorageService implements StorageServiceMethods {
@@ -34,4 +34,40 @@ export class StorageService implements StorageServiceMethods {
         localStorage.setItem("clientHash", clientHash);
         localStorage.setItem("accessToken", accessToken);
     }
+
+    saveMessage(
+        message: string, sender: string,
+        sent_at: number, read: boolean,
+        self_written: boolean
+    ): void {
+        let data = localStorage.getItem("messages");
+        if (data === null) {
+            let el = {
+                "messages": [ { message, sender, sent_at, read, self_written } as Message ]
+            } as MessageArray;
+            localStorage.setItem("messages", JSON.stringify(el));
+        } else {
+            let parsed = JSON.parse(data) as MessageArray;
+            parsed.messages.push({message, sender, sent_at, read, self_written });
+            localStorage.setItem("messages", JSON.stringify(parsed));
+        }
+    }
+
+    getMessageMap(): Map<string, Message[]> {
+        let messages = (JSON.parse(localStorage.getItem("messages") as string) as MessageArray).messages;
+        let dataMap = new Map<string, Message[]>();
+
+        for (let i=0; i<messages.length; i++) {
+            if (dataMap.get(messages[i].sender) === undefined) {
+                dataMap.set(messages[i].sender, [messages[i]]);
+            } else {
+                dataMap.set(
+                    messages[i].sender,
+                    [...(dataMap.get(messages[i].sender) as Message[]), messages[i]]
+                );
+            }
+        }
+        return dataMap;
+    }
+
 }
