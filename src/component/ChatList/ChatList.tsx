@@ -19,6 +19,8 @@ export class ChatList extends React.Component<ChatListProps, ChatListState> {
         super(props);
     }
 
+    // This function handles new messages trough the websocket and saves them
+    // into the localstorage.
     handleMessage(event: IMessageEvent) {
         let jsonData = JSON.parse(event.data as string);
         if (jsonData.action === "send-message") {
@@ -27,9 +29,15 @@ export class ChatList extends React.Component<ChatListProps, ChatListState> {
                 parsedData.message, parsedData.sender,
                 parsedData.sent_at, false, false
             );
+        } else {
+            console.error("unsupported action");
         }
     }
 
+    // This function sets the websocket handler to the
+    // message-handler. After that it fetches all chat data
+    // from the localStorage and re-renders the component
+    // with this new data.
     async componentDidMount() {
         this.props.ws.ws?.setHandler(this.handleMessage);
         let chats = new StorageService().getMessageMap();
@@ -47,6 +55,8 @@ export class ChatList extends React.Component<ChatListProps, ChatListState> {
         this.setState({chats: chatArray});
     }
 
+    // This method counts the number of unread messages in an
+    // array of Messages.
     countUnreadMessages(messages: Message[]): number {
         let counter = 0;
         messages.forEach((value => {
@@ -62,7 +72,7 @@ export class ChatList extends React.Component<ChatListProps, ChatListState> {
         let listItems = new Array<JSX.Element>();
         this.state.chats.forEach(((value) => {
             listItems.push(
-                <div className="chat-box" key={value.userHash}>
+                <div className="chat-box" key={value.userHash} onClick={() => this.props.rerenderParent(value.userHash)}>
                     <img src="/profile.jpg"  alt="profile" />
                     <div className="text-box">
                         <h1>{value.username}</h1>
