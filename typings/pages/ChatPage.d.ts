@@ -6,4 +6,5 @@ export interface ChatPageProps {
 
 export interface ChatPageState {
     userHashForChat: string;
+    usernameForChat: string;
 }

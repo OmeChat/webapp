@@ -72,7 +72,7 @@ export class ChatList extends React.Component<ChatListProps, ChatListState> {
         let listItems = new Array<JSX.Element>();
         this.state.chats.forEach(((value) => {
             listItems.push(
-                <div className="chat-box" key={value.userHash} onClick={() => this.props.rerenderParent(value.userHash)}>
+                <div className="chat-box" key={value.userHash} onClick={() => this.props.rerenderParent(value.userHash, value.username)}>
                     <img src="/profile.jpg"  alt="profile" />
                     <div className="text-box">
                         <h1>{value.username}</h1>

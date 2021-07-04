@@ -7,7 +7,8 @@ import {ChatView} from "../../component/ChatView/ChatView";
 export class ChatPage extends React.Component<ChatPageProps, ChatPageState> {
 
     state: ChatPageState = {
-      userHashForChat: ""
+      userHashForChat: "",
+      usernameForChat: "",
     };
 
     constructor(props: ChatPageProps) {
@@ -18,8 +19,8 @@ export class ChatPage extends React.Component<ChatPageProps, ChatPageState> {
     // This method is re-rendering the whole component
     // and updates trough this the messages and the state
     // of the ChatView on the right side.
-    renderChat(userHash: string) {
-        this.setState({userHashForChat: userHash});
+    renderChat(userHash: string, username: string) {
+        this.setState({userHashForChat: userHash, usernameForChat: username});
     }
 
     render() {
@@ -33,7 +34,7 @@ export class ChatPage extends React.Component<ChatPageProps, ChatPageState> {
             return (
                 <div className="full-bg">
                     <ChatList ws={this.props.websocket} rerenderParent={this.renderChat} />
-                    <ChatView />
+                    <ChatView  userHash={this.state.userHashForChat} username={this.state.usernameForChat}/>
                 </div>
             );
         }
