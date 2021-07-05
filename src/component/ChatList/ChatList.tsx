@@ -72,7 +72,7 @@ export class ChatList extends React.Component<ChatListProps, ChatListState> {
         if (this.state.chats.length === 0) {
             newChats.push({
                 messages: [msg],
-                username: ((await new RespAPI().getUsernames([msg.sender])) as any)+[msg.sender],
+                username: ((await new RespAPI().getUsernames([msg.sender])) as any)[msg.sender],
                 userHash: msg.sender
             } as ChatEntry);
         }
