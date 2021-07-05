@@ -4,7 +4,8 @@ import {ChatPageProps, ChatPageState} from "../../../typings/pages/ChatPage";
 import {ChatList} from "../../component/ChatList/ChatList";
 import {ChatView} from "../../component/ChatView/ChatView";
 import {Message} from "../../../typings/services/storage";
-import {StorageService} from "../../services/storage";
+import {ScreenWrapper} from "../../component/ScreenWrapper/ScreenWrapper";
+import {useScreenType} from "../../hooks/useScreenType";
 
 export class ChatPage extends React.Component<ChatPageProps, ChatPageState> {
 
@@ -12,7 +13,8 @@ export class ChatPage extends React.Component<ChatPageProps, ChatPageState> {
       userHashForChat: "",
       usernameForChat: "",
       messages: [],
-      key: 0
+      key: 0,
+      mobileTargetPosition: "left"
     };
 
     constructor(props: ChatPageProps) {
@@ -20,6 +22,7 @@ export class ChatPage extends React.Component<ChatPageProps, ChatPageState> {
         this.renderChat = this.renderChat.bind(this);
         this.setMessages = this.setMessages.bind(this);
         this.updateChat = this.updateChat.bind(this);
+        this.setMobileOrientation = this.setMobileOrientation.bind(this);
     }
 
     // This method is re-rendering the whole component
@@ -39,6 +42,11 @@ export class ChatPage extends React.Component<ChatPageProps, ChatPageState> {
         this.setState({messages: messages});
     }
 
+    // This method handles the mobile positioning for the ScreenWrapper.
+    // It handles the window management on mobile devices.
+    setMobileOrientation(pos: string): void {
+        this.setState({mobileTargetPosition: pos});
+    }
 
 
     render() {
@@ -50,26 +58,29 @@ export class ChatPage extends React.Component<ChatPageProps, ChatPageState> {
                         rerenderParent={this.renderChat}
                         messages={this.state.messages}
                         rerenderChat={this.updateChat}
-                    />
+                        mobileTargetPositionChanger={this.setMobileOrientation}/>
                 </div>
             );
         } else {
             return (
-                <div className="full-bg">
-                    <ChatList
-                        ws={this.props.websocket}
-                        rerenderParent={this.renderChat}
-                        messages={this.state.messages}
-                        rerenderChat={this.updateChat}
-                    />
-                    <ChatView
-                        userHash={this.state.userHashForChat}
-                        username={this.state.usernameForChat}
-                        messageUpdater={this.setMessages}
-                        websocket={this.props.websocket}
-                        key={this.state.key}
-                    />
-                </div>
+                <ScreenWrapper targetPosition={this.state.mobileTargetPosition}>
+                    <div className="full-bg">
+                        <ChatList
+                            ws={this.props.websocket}
+                            rerenderParent={this.renderChat}
+                            messages={this.state.messages}
+                            rerenderChat={this.updateChat}
+                            mobileTargetPositionChanger={this.setMobileOrientation}/>
+                        <ChatView
+                            userHash={this.state.userHashForChat}
+                            username={this.state.usernameForChat}
+                            messageUpdater={this.setMessages}
+                            websocket={this.props.websocket}
+                            key={this.state.key}
+                            mobileScroller={this.setMobileOrientation}
+                        />
+                    </div>
+                </ScreenWrapper>
             );
         }
     }

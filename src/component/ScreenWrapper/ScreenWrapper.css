@@ -1,0 +1,7 @@
+.mobile {
+    display: flex;
+    flex-direction: row;
+    width: 200%;
+    height: 100%;
+    overflow: hidden;
+}

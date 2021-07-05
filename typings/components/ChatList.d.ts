@@ -6,6 +6,7 @@ export interface ChatListProps {
     rerenderParent: any;
     messages: Message[];
     rerenderChat: any;
+    mobileTargetPositionChanger: any;
 }
 
 export interface ChatListState {

@@ -3,13 +3,12 @@ import {ChatViewProps, ChatViewState} from "../../../typings/components/ChatView
 import "./ChatView.css";
 import {faEllipsisV} from "@fortawesome/free-solid-svg-icons/faEllipsisV";
 import {faPaperPlane} from "@fortawesome/free-solid-svg-icons/faPaperPlane";
+import {faArrowLeft} from "@fortawesome/free-solid-svg-icons/faArrowLeft";
 import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
 import {StorageService} from "../../services/storage";
-import {checkMessageArrayDifference, sortMessagesByDate} from "../../services/utils";
+import {sortMessagesByDate} from "../../services/utils";
 import {Message} from "../../../typings/services/storage";
-import {Websocket} from "../../services/websocket/websocket";
-import {WebsocketImplementation} from "../../services/websocket/implementation";
-import {IMessageEvent} from "websocket";
+
 
 export class ChatView extends React.Component<ChatViewProps, ChatViewState> {
 
@@ -97,7 +96,13 @@ export class ChatView extends React.Component<ChatViewProps, ChatViewState> {
         return (
           <div className="box">
             <div className="box-header">
-                <img src="/profile.jpg"  alt="profile" />
+                {window.innerWidth <= 780 ? (
+                    <div className="back-dialog" onClick={() => this.props.mobileScroller("left")}>
+                        <FontAwesomeIcon icon={faArrowLeft} size={"lg"} color={"#757575"} />
+                        <img src="/profile.jpg"  alt="profile" />
+                    </div>
+                ) : <img src="/profile.jpg"  alt="profile" />
+                }
                 <h1>{this.props.username === "" ? "anonymous" : this.props.username}</h1>
                 <FontAwesomeIcon icon={faEllipsisV} color={"#676767"} size={"lg"} />
             </div>

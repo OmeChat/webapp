@@ -5,4 +5,11 @@
     display: grid;
     grid-template-columns: 25% 75%;
     place-items: center;
+    overflow: hidden;
+}
+@media only screen and (max-width: 740px) {
+    .full-bg {
+        display: flex;
+        flex-direction: row;
+    }
 }

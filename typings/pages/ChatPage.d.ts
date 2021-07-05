@@ -10,4 +10,5 @@ export interface ChatPageState {
     usernameForChat: string;
     messages: Message[];
     key: number;
+    mobileTargetPosition: string;
 }

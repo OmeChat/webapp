@@ -6,6 +6,7 @@ export interface ChatViewProps {
     username: string;
     messageUpdater: any;
     websocket: Websocket;
+    mobileScroller: any;
 }
 
 export interface ChatViewState {

@@ -129,6 +129,7 @@ export class ChatList extends React.Component<ChatListProps, ChatListState> {
 
     openChat(value: ChatEntry): void {
         this.props.rerenderParent(value.userHash, value.username);
+        this.props.mobileTargetPositionChanger("right");
         this.setState({activeChat: value.userHash});
     }
 
