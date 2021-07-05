@@ -3,6 +3,7 @@ import {ErrorResponse} from "../../typings/services/rest-api/ErrorResponse";
 import {StorageService} from "./storage";
 import {GetUsernamesResponse} from "../../typings/services/rest-api/GetUsernames";
 import {CreateAccountResponse} from "../../typings/services/rest-api/CreateAccount";
+import {RequestRandomPeopleResponse} from "../../typings/services/rest-api/RequestRandomPeople";
 
 var BASE_URL = "https://api.omechat.mathis-burger.de";
 
@@ -60,6 +61,21 @@ export class RespAPI {
         ]);
         let resp = await RespAPI.get<GetUsernamesResponse>("/user-api/get-usernames", params);
         return resp.usernames;
+    }
+
+    // This method requests random users with the given age
+    // tolerance and returns the response as instance of
+    // RequestRandomPeopleResponse or ErrorResponse.
+    // What it really is depends on the request state.
+    async getRandomUser(tolerance: number): Promise<RequestRandomPeopleResponse | ErrorResponse> {
+        let loginCredentials = new StorageService().getUserLoginCredentials();
+        let params = new Map<string, string>([
+            ["user_hash", loginCredentials.userHash],
+            ["client_hash", loginCredentials.clientHash],
+            ["access_token", loginCredentials.accessToken],
+            ["tolerance", "" + tolerance]
+        ]);
+        return await RespAPI.get<RequestRandomPeopleResponse | ErrorResponse>("/user-api/get-matching-user", params);
     }
 
     // This function implements the functionality to perform a get

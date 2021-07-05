@@ -1,10 +1,87 @@
 .overlay-container {
     width: 50vw;
-    height: 50vh;
+    height: 70vh;
     z-index: 20;
-    background: #1F8817;
+    background: #2B2B31;
     position: absolute;
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
+    border-radius: 10px;
+    display: grid;
+    place-items: center;
+    grid-template-rows: 10% 10% 80%;
+    border: 2px solid #323232;
+    box-shadow: 2px 2px 2px rgba(0,0,0,0.2);
+}
+
+.overlay-container h1 {
+    color: white;
+}
+.overlay-container input {
+    height: 60%;
+    width: 35%;
+    border-radius: 10px;
+    border: none;
+    background: #606060;
+    color: white;
+    outline: none;
+    transition: .3s;
+    font-size: 1.2em;
+    font-family: "Roboto", sans-serif;
+}
+.overlay-container input:focus {
+    transform: scale(1.02);
+}
+.overlay-container .user-box {
+    width: 80%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    overflow-x: hidden;
+    overflow-y: scroll;
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+}
+.overlay-container .user-box::-webkit-scrollbar {
+    display: none;
+}
+.overlay-container .user-box .element {
+    width: 100%;
+    height: 100px;
+    display: grid;
+    place-items: center;
+    grid-template-columns: 20% 40% 30% 10%;
+    border-radius: 10px;
+    background: #606060;
+    transition: .3s;
+}
+.overlay-container .user-box .element:hover {
+    filter: brightness(1.2);
+}
+.overlay-container .user-box .element img {
+    display: grid;
+    place-items: center;
+    width: 60%;
+    aspect-ratio: 1/1;
+    border-radius: 50%;
+}
+.overlay-container .user-box .element h1 {
+    font-family: "Roboto", sans-serif;
+    font-size: 1.5em;
+    color: white;
+}
+.overlay-container .user-box .element .start-chat {
+    width: 75%;
+    aspect-ratio: 1/1;
+    background: #848484;
+    color: white;
+    border-radius: 50%;
+    display: grid;
+    place-items: center;
+    transition: .3s;
+}
+.overlay-container .user-box .element .start-chat:hover {
+    box-shadow: 2px 2px 2px rgba(0,0,0,0.2);
 }

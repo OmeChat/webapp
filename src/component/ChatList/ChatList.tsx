@@ -11,6 +11,7 @@ import {RespAPI} from "../../services/resp-api";
 import {checkMessageArrayDifference} from "../../services/utils";
 import ReactDOM from "react-dom";
 import {Dropdown} from "../Dropdown/Dropdown";
+import {UserSearchOverlay} from "../UserSearchOverlay/UserSearchOverlay";
 
 export class ChatList extends React.Component<ChatListProps, ChatListState> {
 
@@ -30,17 +31,13 @@ export class ChatList extends React.Component<ChatListProps, ChatListState> {
     // This function handles new messages trough the websocket and saves them
     // into the localstorage.
     handleMessage(event: IMessageEvent) {
-        console.log(event.data);
         let jsonData = JSON.parse(event.data as string);
-        console.log(jsonData);
         if (jsonData.action === "send-message") {
-            console.log("golden");
             let parsedData = jsonData as MessageModel;
             new StorageService().saveMessage(
                 parsedData.message, parsedData.sender,
                 parsedData.sent_at * 1000, this.state.activeChat === parsedData.sender, false
             );
-            console.log("hää");
             this.addNewMessageToChat({
                 message: parsedData.message,
                 sender: parsedData.sender,
@@ -57,7 +54,6 @@ export class ChatList extends React.Component<ChatListProps, ChatListState> {
     }
 
     async addNewMessageToChat(msg: Message): Promise<void> {
-        console.log(msg);
         let newChats = new Array<ChatEntry>();
         this.state.chats.slice().forEach((chat: ChatEntry) => {
             if (msg.sender === chat.userHash) {
@@ -186,7 +182,9 @@ export class ChatList extends React.Component<ChatListProps, ChatListState> {
                         <div onClick={() => {
                             ReactDOM.render(<Dropdown
                                 elements={[
-                                    {title: "Find new user", executor: () => console.log("porn")}
+                                    {title: "Find new user", executor: () =>
+                                        ReactDOM.render(<UserSearchOverlay />, document.getElementById("overlay"))
+                                    }
                                 ]}
                                 xCords={this.state.cursorX}
                                 yCords={this.state.cursorY}

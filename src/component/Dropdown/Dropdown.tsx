@@ -15,8 +15,12 @@ export class Dropdown extends React.Component<DropdownProps, any> {
 
     handleClickOutside(event: any) {
         if (this.wrapperRef && !this.wrapperRef.current.contains(event.target)) {
-            ReactDOM.render(<div style={{display: "none"}}/>, document.getElementById('dropdown'));
+            this.unmountDropdown();
         }
+    }
+
+    unmountDropdown(): void {
+        ReactDOM.render(<div style={{display: "none"}}/>, document.getElementById('dropdown'));
     }
 
     componentDidMount() {
@@ -31,7 +35,11 @@ export class Dropdown extends React.Component<DropdownProps, any> {
         let items = new Array<JSX.Element>();
         this.props.elements.forEach((element: DropdownButtonAction) => {
             items.push(
-                <div className="dropdown-element" onClick={() => element.executor()}>
+                <div className="dropdown-element" onClick={() => {
+                    element.executor();
+                    this.unmountDropdown();
+
+                }}>
                     {element.title}
                 </div>
             )
