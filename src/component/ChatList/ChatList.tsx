@@ -26,20 +26,24 @@ export class ChatList extends React.Component<ChatListProps, ChatListState> {
     // This function handles new messages trough the websocket and saves them
     // into the localstorage.
     handleMessage(event: IMessageEvent) {
+        console.log(event.data);
         let jsonData = JSON.parse(event.data as string);
+        console.log(jsonData);
         if (jsonData.action === "send-message") {
+            console.log("golden");
             let parsedData = jsonData as MessageModel;
             new StorageService().saveMessage(
                 parsedData.message, parsedData.sender,
                 parsedData.sent_at * 1000, this.state.activeChat === parsedData.sender, false
             );
+            console.log("hää");
             this.addNewMessageToChat({
                 message: parsedData.message,
                 sender: parsedData.sender,
                 sent_at: parsedData.sent_at * 1000,
                 read: this.state.activeChat === parsedData.sender,
                 self_written: false
-            } as Message);
+            } as Message).then();
             if (this.state.activeChat === parsedData.sender) {
                 this.props.rerenderChat();
             }
@@ -48,7 +52,8 @@ export class ChatList extends React.Component<ChatListProps, ChatListState> {
         }
     }
 
-    addNewMessageToChat(msg: Message): void {
+    async addNewMessageToChat(msg: Message): Promise<void> {
+        console.log(msg);
         let newChats = new Array<ChatEntry>();
         this.state.chats.slice().forEach((chat: ChatEntry) => {
             if (msg.sender === chat.userHash) {
@@ -64,6 +69,13 @@ export class ChatList extends React.Component<ChatListProps, ChatListState> {
                 newChats.push(chat);
             }
         });
+        if (this.state.chats.length === 0) {
+            newChats.push({
+                messages: [msg],
+                username: ((await new RespAPI().getUsernames([msg.sender])) as any)[msg.sender],
+                userHash: msg.sender
+            } as ChatEntry);
+        }
         this.setState({chats: newChats});
     }
 
