@@ -12,6 +12,8 @@ export interface ChatListProps {
 export interface ChatListState {
     chats: ChatEntry[];
     activeChat: string;
+    cursorX: number;
+    cursorY: number;
 }
 
 export interface ChatEntry {

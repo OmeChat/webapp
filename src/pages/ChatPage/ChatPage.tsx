@@ -48,7 +48,6 @@ export class ChatPage extends React.Component<ChatPageProps, ChatPageState> {
         this.setState({mobileTargetPosition: pos});
     }
 
-
     render() {
         if (this.state.userHashForChat === "") {
             return (

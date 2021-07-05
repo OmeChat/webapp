@@ -9,12 +9,16 @@ import {StorageService} from "../../services/storage";
 import {Message} from "../../../typings/services/storage";
 import {RespAPI} from "../../services/resp-api";
 import {checkMessageArrayDifference} from "../../services/utils";
+import ReactDOM from "react-dom";
+import {Dropdown} from "../Dropdown/Dropdown";
 
 export class ChatList extends React.Component<ChatListProps, ChatListState> {
 
     state: ChatListState = {
         chats: new Array<ChatEntry>(),
-        activeChat: ""
+        activeChat: "",
+        cursorX: 0,
+        cursorY: 0
     };
 
     constructor(props: ChatListProps) {
@@ -72,7 +76,7 @@ export class ChatList extends React.Component<ChatListProps, ChatListState> {
         if (this.state.chats.length === 0) {
             newChats.push({
                 messages: [msg],
-                username: ((await new RespAPI().getUsernames([msg.sender])) as any)[msg.sender],
+                username: ((await new RespAPI().getUsernames([msg.sender])) as any)+[msg.sender],
                 userHash: msg.sender
             } as ChatEntry);
         }
@@ -179,7 +183,17 @@ export class ChatList extends React.Component<ChatListProps, ChatListState> {
                     <div className="header-box">
                         <img src={"/logo.jpg"} alt={"logo"}/>
                         <h1>OmeChat</h1>
-                        <FontAwesomeIcon icon={faEllipsisV} color={"#676767"} size={"lg"} />
+                        <div onClick={() => {
+                            ReactDOM.render(<Dropdown
+                                elements={[
+                                    {title: "Find new user", executor: () => console.log("porn")}
+                                ]}
+                                xCords={this.state.cursorX}
+                                yCords={this.state.cursorY}
+                            />, document.getElementById('dropdown'))
+                        }} onMouseMove={(event) => this.setState({cursorX: event.clientX, cursorY: event.clientY})}>
+                            <FontAwesomeIcon icon={faEllipsisV} color={"#676767"} size={"lg"} />
+                        </div>
                     </div>
                     {listItems}
                 </div>

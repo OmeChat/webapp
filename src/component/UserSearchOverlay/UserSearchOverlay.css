@@ -1,0 +1,10 @@
+.overlay-container {
+    width: 50vw;
+    height: 50vh;
+    z-index: 20;
+    background: #1F8817;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+}
