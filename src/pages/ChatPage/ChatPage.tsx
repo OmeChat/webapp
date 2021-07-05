@@ -26,7 +26,7 @@ export class ChatPage extends React.Component<ChatPageProps, ChatPageState> {
     // and updates trough this the messages and the state
     // of the ChatView on the right side.
     renderChat(userHash: string, username: string) {
-        this.setState({userHashForChat: userHash, usernameForChat: username});
+        this.setState({userHashForChat: userHash, usernameForChat: username, key: this.state.key + 1});
     }
 
     updateChat(): void {

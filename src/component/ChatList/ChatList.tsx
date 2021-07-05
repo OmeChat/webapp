@@ -20,6 +20,7 @@ export class ChatList extends React.Component<ChatListProps, ChatListState> {
     constructor(props: ChatListProps) {
         super(props);
         this.handleMessage = this.handleMessage.bind(this);
+        this.props.ws.ws?.setHandler(this.handleMessage);
     }
 
     // This function handles new messages trough the websocket and saves them
@@ -28,7 +29,6 @@ export class ChatList extends React.Component<ChatListProps, ChatListState> {
         let jsonData = JSON.parse(event.data as string);
         if (jsonData.action === "send-message") {
             let parsedData = jsonData as MessageModel;
-            console.log("prettiest face", this.state.activeChat);
             new StorageService().saveMessage(
                 parsedData.message, parsedData.sender,
                 parsedData.sent_at * 1000, this.state.activeChat === parsedData.sender, false
@@ -48,7 +48,7 @@ export class ChatList extends React.Component<ChatListProps, ChatListState> {
         }
     }
 
-    addNewMessageToChat(msg: Message): void {;
+    addNewMessageToChat(msg: Message): void {
         let newChats = new Array<ChatEntry>();
         this.state.chats.slice().forEach((chat: ChatEntry) => {
             if (msg.sender === chat.userHash) {
@@ -97,12 +97,20 @@ export class ChatList extends React.Component<ChatListProps, ChatListState> {
     // from the localStorage and re-renders the component
     // with this new data.
     async dataLoader() {
-        this.props.ws.ws?.setHandler(this.handleMessage);
         let chats = new Map<string, Message[]>();
         if (this.props.messages.length === 0) {
+            console.log("option1");
             chats = new StorageService().getMessageMap();
         } else {
-            chats = this.messageArrayToMessageMap(this.props.messages);
+            let msgs = new StorageService().getMessageMap();
+            let newMessages = new Array<Message>();
+            msgs.forEach(((value, key) => {
+                if (this.props.messages.length > 0 && this.props.messages[0].sender !== key) {
+                    newMessages.push(...value);
+                }
+            }));
+            newMessages.push(...this.props.messages);
+            chats = this.messageArrayToMessageMap(newMessages);
         }
         let arr = new Array<string>();
         chats.forEach(((value, key) => arr.push(key)));
