@@ -98,7 +98,8 @@ export class ChatList extends React.Component<ChatListProps, ChatListState> {
 
     render() {
         let listItems = new Array<JSX.Element>();
-        this.state.chats.forEach(((value) => {
+        this.state.chats.forEach((value) => {
+            let unreadMsgs = this.countUnreadMessages(value.messages);
             listItems.push(
                 <div className="chat-box" key={value.userHash} onClick={() => this.props.rerenderParent(value.userHash, value.username)}>
                     <img src="/profile.jpg"  alt="profile" />
@@ -106,10 +107,10 @@ export class ChatList extends React.Component<ChatListProps, ChatListState> {
                         <h1>{value.username}</h1>
                         <p>{value.messages[value.messages.length - 1].message}</p>
                     </div>
-                    <div className="new-message">{this.countUnreadMessages(value.messages)}</div>
+                    {unreadMsgs > 0 ? <div className="new-message">{unreadMsgs}</div> : null}
                 </div>
             )
-        }));
+        });
         return (
             <div className="outer-container">
                 <div className="inner-container">

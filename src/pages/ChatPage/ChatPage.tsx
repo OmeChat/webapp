@@ -30,7 +30,6 @@ export class ChatPage extends React.Component<ChatPageProps, ChatPageState> {
     // This method can be used in children components
     // to update all messages in the ChatList.
     setMessages(messages: Message[]): void {
-        console.log("x", messages[0].read);
         this.setState({messages: messages});
     }
 
