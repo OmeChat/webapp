@@ -5,7 +5,7 @@ import {faEllipsisV} from "@fortawesome/free-solid-svg-icons/faEllipsisV";
 import {faPaperPlane} from "@fortawesome/free-solid-svg-icons/faPaperPlane";
 import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
 import {StorageService} from "../../services/storage";
-import {sortMessagesByDate} from "../../services/utils";
+import {checkMessageArrayDifference, sortMessagesByDate} from "../../services/utils";
 import {Message} from "../../../typings/services/storage";
 
 export class ChatView extends React.Component<ChatViewProps, ChatViewState> {
@@ -42,11 +42,12 @@ export class ChatView extends React.Component<ChatViewProps, ChatViewState> {
         this.setState({messages});
     }
 
+
     // This method checks if the message input is not empty
     // and the enter key is pressed. If this is true
     // the sendAndSaveMessage is being called.
     onMessageSubmit(event: any): void {
-        if (event.key === "enter" || this.state.newMessageValue !== "") {
+        if (event.key === "Enter" && this.state.newMessageValue !== "") {
             this.sendAndSaveMessage(this.state.newMessageValue);
         }
     }

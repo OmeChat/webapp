@@ -1,4 +1,5 @@
 import {Message} from "../../typings/services/storage";
+import {ChatEntry} from "../../typings/components/ChatList";
 
 // This method sorts the messages by the newest date.
 // The algorithm for this implementation is bubblesort.
@@ -42,4 +43,14 @@ export function checkMessageArrayDifference(oldArr: Message[], newArr: Message[]
         }
     }
     return diff;
+}
+
+export function getChatEntryByUserHash(entrys: ChatEntry[], hash: string): ChatEntry | null {
+    entrys.forEach((entry: ChatEntry) => {
+        if (entry.userHash === hash) {
+            return entry;
+        }
+    });
+    console.log("coc");
+    return null;
 }

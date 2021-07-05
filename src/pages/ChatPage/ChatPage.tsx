@@ -18,6 +18,7 @@ export class ChatPage extends React.Component<ChatPageProps, ChatPageState> {
         super(props);
         this.renderChat = this.renderChat.bind(this);
         this.setMessages = this.setMessages.bind(this);
+        this.rerenderChat = this.rerenderChat.bind(this);
     }
 
     // This method is re-rendering the whole component
@@ -25,6 +26,10 @@ export class ChatPage extends React.Component<ChatPageProps, ChatPageState> {
     // of the ChatView on the right side.
     renderChat(userHash: string, username: string) {
         this.setState({userHashForChat: userHash, usernameForChat: username});
+    }
+
+    rerenderChat(): void {
+        this.setState({})
     }
 
     // This method can be used in children components
@@ -39,13 +44,23 @@ export class ChatPage extends React.Component<ChatPageProps, ChatPageState> {
         if (this.state.userHashForChat === "") {
             return (
                 <div className="full-bg">
-                    <ChatList ws={this.props.websocket} rerenderParent={this.renderChat}  messages={this.state.messages}/>
+                    <ChatList
+                        ws={this.props.websocket}
+                        rerenderParent={this.renderChat}
+                        messages={this.state.messages}
+                        rerenderChat={this.rerenderChat}
+                    />
                 </div>
             );
         } else {
             return (
                 <div className="full-bg">
-                    <ChatList ws={this.props.websocket} rerenderParent={this.renderChat} messages={this.state.messages} />
+                    <ChatList
+                        ws={this.props.websocket}
+                        rerenderParent={this.renderChat}
+                        messages={this.state.messages}
+                        rerenderChat={this.rerenderChat}
+                    />
                     <ChatView
                         userHash={this.state.userHashForChat}
                         username={this.state.usernameForChat}

@@ -8,7 +8,7 @@ import {MessageModel} from "../../../typings/services/websocket";
 import {StorageService} from "../../services/storage";
 import {Message} from "../../../typings/services/storage";
 import {RespAPI} from "../../services/resp-api";
-import {checkMessageArrayDifference} from "../../services/utils";
+import {checkMessageArrayDifference, getChatEntryByUserHash} from "../../services/utils";
 
 export class ChatList extends React.Component<ChatListProps, ChatListState> {
 
@@ -33,7 +33,6 @@ export class ChatList extends React.Component<ChatListProps, ChatListState> {
                 parsedData.message, parsedData.sender,
                 parsedData.sent_at, this.state.activeChat === parsedData.sender, false
             );
-
             this.addNewMessageToChat({
                 message: parsedData.message,
                 sender: parsedData.sender,
@@ -41,13 +40,15 @@ export class ChatList extends React.Component<ChatListProps, ChatListState> {
                 read: this.state.activeChat === parsedData.sender,
                 self_written: false
             } as Message);
+            if (this.state.activeChat === parsedData.sender) {
+                this.props.rerenderChat();
+            }
         } else {
             console.error("unsupported action");
         }
     }
 
-    addNewMessageToChat(msg: Message): void {
-        console.log("daed");
+    addNewMessageToChat(msg: Message): void {;
         let newChats = new Array<ChatEntry>();
         this.state.chats.slice().forEach((chat: ChatEntry) => {
             if (msg.sender === chat.userHash) {

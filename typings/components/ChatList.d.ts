@@ -5,6 +5,7 @@ export interface ChatListProps {
     ws: Websocket;
     rerenderParent: any;
     messages: Message[];
+    rerenderChat: any;
 }
 
 export interface ChatListState {
