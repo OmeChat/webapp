@@ -4,6 +4,7 @@ import {Message} from "../services/storage";
 export interface ChatListProps {
     ws: Websocket;
     rerenderParent: any;
+    messages: Message[];
 }
 
 export interface ChatListState {

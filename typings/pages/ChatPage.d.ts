@@ -1,4 +1,5 @@
 import {Websocket} from "../../src/services/websocket/websocket";
+import {Message} from "../services/storage";
 
 export interface ChatPageProps {
     websocket: Websocket
@@ -7,4 +8,5 @@ export interface ChatPageProps {
 export interface ChatPageState {
     userHashForChat: string;
     usernameForChat: string;
+    messages: Message[];
 }

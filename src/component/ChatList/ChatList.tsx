@@ -34,13 +34,41 @@ export class ChatList extends React.Component<ChatListProps, ChatListState> {
         }
     }
 
+    messageArrayToMessageMap(messages: Message[]): Map<string, Message[]> {
+        let dataMap = new Map<string, Message[]>();
+        for (let i=0; i<messages.length; i++) {
+            if (dataMap.get(messages[i].sender) === undefined) {
+                dataMap.set(messages[i].sender, [messages[i]]);
+            } else {
+                dataMap.set(
+                    messages[i].sender,
+                    [...(dataMap.get(messages[i].sender) as Message[]), messages[i]]
+                );
+            }
+        }
+        return dataMap;
+    }
+
+    async componentDidMount() {
+        await this.dataLoader();
+    }
+
+    async componentDidUpdate(prevProps: Readonly<ChatListProps>, prevState: Readonly<ChatListState>, snapshot?: any) {
+        await this.dataLoader();
+    }
+
     // This function sets the websocket handler to the
     // message-handler. After that it fetches all chat data
     // from the localStorage and re-renders the component
     // with this new data.
-    async componentDidMount() {
+    async dataLoader() {
         this.props.ws.ws?.setHandler(this.handleMessage);
-        let chats = new StorageService().getMessageMap();
+        let chats = new Map<string, Message[]>();
+        if (this.props.messages.length === 0) {
+            chats = new StorageService().getMessageMap();
+        } else {
+            chats = this.messageArrayToMessageMap(this.props.messages);
+        }
         let arr = new Array<string>();
         chats.forEach(((value, key) => arr.push(key)));
         let userIdentifier = await new RespAPI().getUsernames(arr);

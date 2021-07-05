@@ -18,10 +18,24 @@ export class ChatView extends React.Component<ChatViewProps, ChatViewState> {
         super(props);
     }
 
+    userHashUnreadMessages(msgs: Message[]): boolean {
+        let hasUnread = false;
+        msgs.forEach((msg: Message) => {
+            if (!msg.read) {
+                hasUnread = true;
+            }
+        });
+        return hasUnread;
+    }
+
     componentDidMount() {
         let messages = sortMessagesByDate(
             new StorageService().getMessageMap().get(this.props.userHash) as Message[]
         );
+        if (this.userHashUnreadMessages(messages)) {
+            let updatedMsgs = new StorageService().readAllMessages(this.props.userHash);
+            this.props.messageUpdater(updatedMsgs);
+        }
         this.setState({messages});
     }
 
@@ -30,11 +44,11 @@ export class ChatView extends React.Component<ChatViewProps, ChatViewState> {
         this.state.messages.forEach((message: Message) => {
             if (message.self_written) {
                 messageEmbeds.push(
-                    <div className="own-msg">{message.message}</div>
+                    <div className="own-msg" key={message.sent_at}>{message.message}</div>
                 );
             } else {
                 messageEmbeds.push(
-                    <div className="foreign-message">{message.message}</div>
+                    <div className="foreign-message" key={message.sent_at}>{message.message}</div>
                 );
             }
         });

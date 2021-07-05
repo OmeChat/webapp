@@ -70,4 +70,35 @@ export class StorageService implements StorageServiceMethods {
         return dataMap;
     }
 
+    // This function takes an userHash and
+    // updates all read-states of this messages
+    // to true.
+    readAllMessages(userHash: string): Message[] {
+        let messages = this.getMessageMap().get(userHash) as Message[];
+        let newMsgs = new Array<Message>();
+        messages.forEach((message: Message) => {
+            let newMsg = message;
+            newMsg.read = true;
+            newMsgs.push(newMsg);
+        });
+        this.updateMessagesOfUser(newMsgs);
+        return newMsgs;
+    }
+
+    // This function updates all messages that are
+    // given in the array.
+    updateMessagesOfUser(msgs: Message[]): void {
+        let data = localStorage.getItem("messages");
+        let messages = (JSON.parse(data as string) as MessageArray).messages;
+        let newMsgs = new Array<Message>();
+        messages.forEach((msg: Message) => {
+            if(msgs[0].sender !== msg.sender) {
+                newMsgs.push(msg);
+            }
+        });
+        newMsgs.push(...msgs);
+        let parsed = {messages: newMsgs} as MessageArray;
+        localStorage.setItem("messages", JSON.stringify(parsed));
+    }
+
 }
