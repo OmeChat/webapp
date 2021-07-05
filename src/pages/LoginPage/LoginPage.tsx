@@ -1,11 +1,11 @@
 import React, {ChangeEvent} from "react";
-import {LoginPageState} from "../../../typings/pages/LoginPage";
+import {LoginPageProps, LoginPageState} from "../../../typings/pages/LoginPage";
 import "./LoginPage.css";
 import {RespAPI} from "../../services/resp-api";
 import {Snackbar} from "../../component/snackbar/snackbar";
 import ReactDOM from "react-dom";
 
-export class LoginPage extends React.Component<any, LoginPageState> {
+export class LoginPage extends React.Component<LoginPageProps, LoginPageState> {
 
     state: LoginPageState = {
         username: "",
@@ -36,6 +36,7 @@ export class LoginPage extends React.Component<any, LoginPageState> {
                         (e: ChangeEvent<HTMLInputElement>) => {this.setState({secret: e.target.value})}
                     } />
                     <button onClick={() => this.login()}>submit</button>
+                    <a onClick={() => this.props.openRegister()}>Register</a>
                 </div>
             </div>
         );

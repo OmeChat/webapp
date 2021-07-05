@@ -2,10 +2,26 @@ import {AddClientResponse} from "../../typings/services/rest-api/AddClient";
 import {ErrorResponse} from "../../typings/services/rest-api/ErrorResponse";
 import {StorageService} from "./storage";
 import {GetUsernamesResponse} from "../../typings/services/rest-api/GetUsernames";
+import {CreateAccountResponse} from "../../typings/services/rest-api/CreateAccount";
 
 var BASE_URL = "https://api.omechat.mathis-burger.de";
 
 export class RespAPI {
+
+    // This async method calls the userAPI to create a new account.
+    // If this failed the error is sent as string as the second entry of
+    // the tuple. If it was OK, the second entry is the CreateAccountResponse type.
+    async createAccount(username: string, age: number): Promise<[boolean, string | CreateAccountResponse]> {
+        let resp = await RespAPI.post<CreateAccountResponse | ErrorResponse>("/user-api/create-account", {
+            username: username,
+            age: age
+        });
+        if (resp.status === 400) {
+            return [false, (resp as ErrorResponse).error];
+        } else {
+            return [true, resp as CreateAccountResponse];
+        }
+    }
 
     // addClient handles the client login (gains access for websocket communication) for
     // the given client. It returns the state of this login process as a

@@ -6,13 +6,29 @@ import {IMessageEvent} from "websocket";
 import {WebsocketErrorResponse} from "../typings/models/WebsocketErrorResponse";
 import {LoginPage} from "./pages/LoginPage/LoginPage";
 import {ChatPage} from "./pages/ChatPage/ChatPage";
+import {RegisterPage} from "./pages/RegisterPage/RegisterPage";
 
 export default class App extends React.Component<any, AppState> {
 
     state: AppState = {
         loadedData: false,
-        websocket: new Websocket()
+        websocket: new Websocket(),
+        openRegister: false
     };
+
+    constructor(props: any) {
+        super(props);
+        this.openRegister = this.openRegister.bind(this);
+        this.openLogin = this.openLogin.bind(this);
+    }
+
+    openRegister(): void {
+        this.setState({openRegister: true});
+    }
+
+    openLogin(): void {
+        this.setState({openRegister: false});
+    }
 
     async componentDidMount() {
 
@@ -41,7 +57,11 @@ export default class App extends React.Component<any, AppState> {
         if (this.state.websocketLoginSuccessful) {
             return <ChatPage websocket={this.state.websocket} />;
         } else {
-            return <LoginPage />;
+            if (this.state.openRegister) {
+                return <RegisterPage openLogin={this.openLogin} />
+            } else {
+                return <LoginPage openRegister={this.openRegister} />
+            }
         }
     }
 }
