@@ -50,6 +50,7 @@ export class ChatPage extends React.Component<ChatPageProps, ChatPageState> {
                         userHash={this.state.userHashForChat}
                         username={this.state.usernameForChat}
                         messageUpdater={this.setMessages}
+                        websocket={this.props.websocket}
                     />
                 </div>
             );
