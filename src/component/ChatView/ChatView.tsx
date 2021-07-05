@@ -7,6 +7,9 @@ import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
 import {StorageService} from "../../services/storage";
 import {checkMessageArrayDifference, sortMessagesByDate} from "../../services/utils";
 import {Message} from "../../../typings/services/storage";
+import {Websocket} from "../../services/websocket/websocket";
+import {WebsocketImplementation} from "../../services/websocket/implementation";
+import {IMessageEvent} from "websocket";
 
 export class ChatView extends React.Component<ChatViewProps, ChatViewState> {
 
@@ -76,7 +79,7 @@ export class ChatView extends React.Component<ChatViewProps, ChatViewState> {
 
     render() {
         let messageEmbeds = new Array<JSX.Element>();
-        this.state.messages.forEach((message: Message) => {
+        this.state.messages.reverse().forEach((message: Message) => {
             if (message.self_written) {
                 messageEmbeds.push(
                     <div className="own-msg" key={message.sent_at}>{message.message}</div>

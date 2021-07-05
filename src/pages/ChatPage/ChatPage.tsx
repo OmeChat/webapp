@@ -11,14 +11,15 @@ export class ChatPage extends React.Component<ChatPageProps, ChatPageState> {
     state: ChatPageState = {
       userHashForChat: "",
       usernameForChat: "",
-      messages: []
+      messages: [],
+      key: 0
     };
 
     constructor(props: ChatPageProps) {
         super(props);
         this.renderChat = this.renderChat.bind(this);
         this.setMessages = this.setMessages.bind(this);
-        this.rerenderChat = this.rerenderChat.bind(this);
+        this.updateChat = this.updateChat.bind(this);
     }
 
     // This method is re-rendering the whole component
@@ -28,8 +29,8 @@ export class ChatPage extends React.Component<ChatPageProps, ChatPageState> {
         this.setState({userHashForChat: userHash, usernameForChat: username});
     }
 
-    rerenderChat(): void {
-        this.setState({})
+    updateChat(): void {
+        this.setState({key: this.state.key + 1});
     }
 
     // This method can be used in children components
@@ -48,7 +49,7 @@ export class ChatPage extends React.Component<ChatPageProps, ChatPageState> {
                         ws={this.props.websocket}
                         rerenderParent={this.renderChat}
                         messages={this.state.messages}
-                        rerenderChat={this.rerenderChat}
+                        rerenderChat={this.updateChat}
                     />
                 </div>
             );
@@ -59,13 +60,14 @@ export class ChatPage extends React.Component<ChatPageProps, ChatPageState> {
                         ws={this.props.websocket}
                         rerenderParent={this.renderChat}
                         messages={this.state.messages}
-                        rerenderChat={this.rerenderChat}
+                        rerenderChat={this.updateChat}
                     />
                     <ChatView
                         userHash={this.state.userHashForChat}
                         username={this.state.usernameForChat}
                         messageUpdater={this.setMessages}
                         websocket={this.props.websocket}
+                        key={this.state.key}
                     />
                 </div>
             );

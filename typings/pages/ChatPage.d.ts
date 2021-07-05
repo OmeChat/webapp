@@ -9,4 +9,5 @@ export interface ChatPageState {
     userHashForChat: string;
     usernameForChat: string;
     messages: Message[];
+    key: number;
 }

@@ -8,7 +8,7 @@ import {MessageModel} from "../../../typings/services/websocket";
 import {StorageService} from "../../services/storage";
 import {Message} from "../../../typings/services/storage";
 import {RespAPI} from "../../services/resp-api";
-import {checkMessageArrayDifference, getChatEntryByUserHash} from "../../services/utils";
+import {checkMessageArrayDifference} from "../../services/utils";
 
 export class ChatList extends React.Component<ChatListProps, ChatListState> {
 
@@ -31,12 +31,12 @@ export class ChatList extends React.Component<ChatListProps, ChatListState> {
             console.log("prettiest face", this.state.activeChat);
             new StorageService().saveMessage(
                 parsedData.message, parsedData.sender,
-                parsedData.sent_at, this.state.activeChat === parsedData.sender, false
+                parsedData.sent_at * 1000, this.state.activeChat === parsedData.sender, false
             );
             this.addNewMessageToChat({
                 message: parsedData.message,
                 sender: parsedData.sender,
-                sent_at: parsedData.sent_at,
+                sent_at: parsedData.sent_at * 1000,
                 read: this.state.activeChat === parsedData.sender,
                 self_written: false
             } as Message);
