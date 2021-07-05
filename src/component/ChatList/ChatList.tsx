@@ -99,7 +99,6 @@ export class ChatList extends React.Component<ChatListProps, ChatListState> {
     async dataLoader() {
         let chats = new Map<string, Message[]>();
         if (this.props.messages.length === 0) {
-            console.log("option1");
             chats = new StorageService().getMessageMap();
         } else {
             let msgs = new StorageService().getMessageMap();

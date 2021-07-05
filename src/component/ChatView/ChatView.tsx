@@ -14,12 +14,14 @@ import {IMessageEvent} from "websocket";
 export class ChatView extends React.Component<ChatViewProps, ChatViewState> {
 
     state: ChatViewState = {
-        messages: [],
-        newMessageValue: ""
+        messages: []
     };
+
+    inputRef: React.RefObject<HTMLInputElement>;
 
     constructor(props: ChatViewProps) {
         super(props);
+        this.inputRef = React.createRef();
     }
 
     // This method checks if there are unread messages
@@ -50,8 +52,8 @@ export class ChatView extends React.Component<ChatViewProps, ChatViewState> {
     // and the enter key is pressed. If this is true
     // the sendAndSaveMessage is being called.
     onMessageSubmit(event: any): void {
-        if (event.key === "Enter" && this.state.newMessageValue !== "") {
-            this.sendAndSaveMessage(this.state.newMessageValue);
+        if (event.key === "Enter" && this.inputRef.current?.value !== "") {
+            this.sendAndSaveMessage(this.inputRef.current?.value as string);
         }
     }
 
@@ -74,6 +76,7 @@ export class ChatView extends React.Component<ChatViewProps, ChatViewState> {
         }));
         let msgs = this.state.messages.slice();
         msgs.push({message: msg, sender: this.props.userHash, sent_at: timestamp, read: true, self_written: true} as Message);
+        (this.inputRef.current as HTMLInputElement).value = "";
         this.setState({messages: msgs});
     }
 
@@ -104,7 +107,7 @@ export class ChatView extends React.Component<ChatViewProps, ChatViewState> {
             <div className="box-typer">
                 <input
                     placeholder="write message"
-                    onChange={(event) => {this.setState({newMessageValue: event.target.value})}}
+                    ref={this.inputRef}
                     onKeyDown={(event) => this.onMessageSubmit(event)}
                 />
                 <button>

@@ -10,5 +10,4 @@ export interface ChatViewProps {
 
 export interface ChatViewState {
     messages: Message[];
-    newMessageValue: string;
 }
