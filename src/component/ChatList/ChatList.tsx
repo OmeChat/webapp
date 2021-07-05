@@ -14,10 +14,12 @@ export class ChatList extends React.Component<ChatListProps, ChatListState> {
 
     state: ChatListState = {
         chats: new Array<ChatEntry>(),
+        activeChat: ""
     };
 
     constructor(props: ChatListProps) {
         super(props);
+        this.handleMessage = this.handleMessage.bind(this);
     }
 
     // This function handles new messages trough the websocket and saves them
@@ -26,13 +28,42 @@ export class ChatList extends React.Component<ChatListProps, ChatListState> {
         let jsonData = JSON.parse(event.data as string);
         if (jsonData.action === "send-message") {
             let parsedData = jsonData as MessageModel;
+            console.log("prettiest face", this.state.activeChat);
             new StorageService().saveMessage(
                 parsedData.message, parsedData.sender,
-                parsedData.sent_at, false, false
+                parsedData.sent_at, this.state.activeChat === parsedData.sender, false
             );
+
+            this.addNewMessageToChat({
+                message: parsedData.message,
+                sender: parsedData.sender,
+                sent_at: parsedData.sent_at,
+                read: this.state.activeChat === parsedData.sender,
+                self_written: false
+            } as Message);
         } else {
             console.error("unsupported action");
         }
+    }
+
+    addNewMessageToChat(msg: Message): void {
+        console.log("daed");
+        let newChats = new Array<ChatEntry>();
+        this.state.chats.slice().forEach((chat: ChatEntry) => {
+            if (msg.sender === chat.userHash) {
+                let newMsgs = chat.messages.slice();
+                newMsgs.push(msg);
+                let newChat = {
+                    messages: newMsgs,
+                    username: chat.username,
+                    userHash: chat.userHash
+                } as ChatEntry;
+                newChats.push(newChat);
+            } else {
+                newChats.push(chat);
+            }
+        });
+        this.setState({chats: newChats});
     }
 
     messageArrayToMessageMap(messages: Message[]): Map<string, Message[]> {
@@ -88,6 +119,11 @@ export class ChatList extends React.Component<ChatListProps, ChatListState> {
         }
     }
 
+    openChat(value: ChatEntry): void {
+        this.props.rerenderParent(value.userHash, value.username);
+        this.setState({activeChat: value.userHash});
+    }
+
     // This method counts the number of unread messages in an
     // array of Messages.
     countUnreadMessages(messages: Message[]): number {
@@ -106,7 +142,7 @@ export class ChatList extends React.Component<ChatListProps, ChatListState> {
         this.state.chats.forEach((value) => {
             let unreadMsgs = this.countUnreadMessages(value.messages);
             listItems.push(
-                <div className="chat-box" key={value.userHash} onClick={() => this.props.rerenderParent(value.userHash, value.username)}>
+                <div className="chat-box" key={value.userHash} onClick={() => this.openChat(value)}>
                     <img src="/profile.jpg"  alt="profile" />
                     <div className="text-box">
                         <h1>{value.username}</h1>

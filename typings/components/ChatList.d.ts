@@ -9,6 +9,7 @@ export interface ChatListProps {
 
 export interface ChatListState {
     chats: ChatEntry[];
+    activeChat: string;
 }
 
 export interface ChatEntry {
