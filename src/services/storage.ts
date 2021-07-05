@@ -54,6 +54,9 @@ export class StorageService implements StorageServiceMethods {
     }
 
     getMessageMap(): Map<string, Message[]> {
+        if (localStorage.getItem("messages") === null) {
+            return new Map<string, Message[]>();
+        }
         let messages = (JSON.parse(localStorage.getItem("messages") as string) as MessageArray).messages;
         let dataMap = new Map<string, Message[]>();
 

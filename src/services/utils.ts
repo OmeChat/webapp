@@ -16,3 +16,30 @@ export function sortMessagesByDate(messages: Message[]): Message[] {
     }
     return arr;
 }
+
+// This method checks, if there is an difference between the two given
+// arrays. It is used to prevent an infinite loop of get-usernames requests
+// in an state update loop.
+export function checkMessageArrayDifference(oldArr: Message[], newArr: Message[]): boolean {
+    if (oldArr === undefined && newArr !== undefined) {
+        return true;
+    }
+    let diff = false;
+    if (oldArr.length !== newArr.length) {
+        return true;
+    } else {
+        for (let i=0; i<oldArr.length; i++) {
+            if (
+                oldArr[i].sender !== newArr[i].sender ||
+                oldArr[i].sent_at !== newArr[i].sent_at ||
+                oldArr[i].message !== newArr[i].message ||
+                oldArr[i].read !== newArr[i].read ||
+                oldArr[i].self_written !== newArr[i].self_written
+            ) {
+                diff = true;
+                break;
+            }
+        }
+    }
+    return diff;
+}

@@ -8,6 +8,7 @@ import {MessageModel} from "../../../typings/services/websocket";
 import {StorageService} from "../../services/storage";
 import {Message} from "../../../typings/services/storage";
 import {RespAPI} from "../../services/resp-api";
+import {checkMessageArrayDifference} from "../../services/utils";
 
 export class ChatList extends React.Component<ChatListProps, ChatListState> {
 
@@ -54,7 +55,9 @@ export class ChatList extends React.Component<ChatListProps, ChatListState> {
     }
 
     async componentDidUpdate(prevProps: Readonly<ChatListProps>, prevState: Readonly<ChatListState>, snapshot?: any) {
-        await this.dataLoader();
+        if (checkMessageArrayDifference(prevProps.messages, this.props.messages)) {
+            await this.dataLoader();
+        }
     }
 
     // This function sets the websocket handler to the
@@ -71,16 +74,18 @@ export class ChatList extends React.Component<ChatListProps, ChatListState> {
         }
         let arr = new Array<string>();
         chats.forEach(((value, key) => arr.push(key)));
-        let userIdentifier = await new RespAPI().getUsernames(arr);
-        let chatArray = new Array<ChatEntry>();
-        chats.forEach(((value, key) => {
-            chatArray.push({
-                userHash: key,
-                username: (userIdentifier as any)[key],
-                messages: chats.get(key) as Message[]
-            } as ChatEntry);
-        }));
-        this.setState({chats: chatArray});
+        if (arr.length !== 0) {
+            let userIdentifier = await new RespAPI().getUsernames(arr);
+            let chatArray = new Array<ChatEntry>();
+            chats.forEach(((value, key) => {
+                chatArray.push({
+                    userHash: key,
+                    username: (userIdentifier as any)[key],
+                    messages: chats.get(key) as Message[]
+                } as ChatEntry);
+            }));
+            this.setState({chats: chatArray});
+        }
     }
 
     // This method counts the number of unread messages in an
