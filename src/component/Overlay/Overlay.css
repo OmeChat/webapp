@@ -1,0 +1,18 @@
+.overlay {
+    width: 40vw;
+    height: 40vh;
+    background: #343434;
+    z-index: 20;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    border-radius: 10px;
+    color: white;
+    font-family: "Roboto", sans-serif;
+    font-size: 1.4em;
+    overflow-wrap: break-word;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+}

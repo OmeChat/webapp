@@ -1,0 +1,24 @@
+.dropdown {
+    width: 150px;
+    height: fit-content;
+    display: flex;
+    flex-direction: column;
+    z-index: 50;
+    position: absolute;
+    overflow: hidden;
+    border-radius: 5px;
+}
+.dropdown .dropdown-element {
+    width: 100%;
+    height: 40px;
+    background: #343434;
+    color: white;
+    display: grid;
+    place-items: center;
+    transition: .3s;
+    font-family: "Roboto", sans-serif;
+    font-size: 1.2em;
+}
+.dropdown .dropdown-element:hover {
+    filter: brightness(1.8);
+}
